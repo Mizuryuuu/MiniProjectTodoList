@@ -21,8 +21,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -33,6 +37,7 @@ import com.example.belajarandroid.events.LoginEvent
 import com.example.belajarandroid.helper.DashboardScreen
 import com.example.belajarandroid.helper.DialogType
 import com.example.belajarandroid.helper.MessageDialog
+import com.example.belajarandroid.helper.RegisterScreen
 import com.example.belajarandroid.states.LoginState
 import com.example.belajarandroid.viewmodels.LoginViewModel
 import kotlinx.coroutines.delay
@@ -44,10 +49,18 @@ fun LoginScreen(
     onEvent: (LoginEvent) -> Unit,
     onNavigate: (Any) -> Unit
 ) {
+    val annotationText = buildAnnotatedString {
+        append("Doesn't have an account? ")
+        pushStringAnnotation(tag = "Register", annotation = "register")
+        withStyle(style = SpanStyle(color = Color.Blue)) { append("Register here") }
+        pop()
+    }
     LaunchedEffect(state.isDialog) {
         if (state.isDialog) {
-            delay(3000)
-            onEvent(LoginEvent.OnDismissDialog)
+            if (!state.isStatus) {
+                delay(3000)
+                onEvent(LoginEvent.OnDismissDialog)
+            }
         }
     }
     LaunchedEffect(state.isStatus) {
@@ -75,12 +88,12 @@ fun LoginScreen(
                     fontSize = 24.sp
                 )
                 Text(
-                    text = "Login menggunakan username dan password anda."
+                    text = "Sign in with your username and password."
                 )
                 CustomTextField(
                     modifier = modifier.fillMaxWidth(),
                     label = "Username",
-                    hint = "Masukan username anda",
+                    hint = "Enter your username",
                     value = state.username,
                     onValueChange = { text ->
                         onEvent(LoginEvent.OnUsernameChange(text))
@@ -95,7 +108,7 @@ fun LoginScreen(
                 CustomTextField(
                     modifier = modifier.fillMaxWidth(),
                     label = "Password",
-                    hint = "Masukan password anda",
+                    hint = "Enter your password",
                     value = state.password,
                     onValueChange = { text ->
                         onEvent(LoginEvent.OnPasswordChange(text))
@@ -124,6 +137,23 @@ fun LoginScreen(
                     }
                 ) {
                     Text(text = "Login")
+                }
+                Box (
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ){
+                    Text(
+                        text = annotationText,
+                        modifier = Modifier.clickable {
+                            annotationText.getStringAnnotations(
+                                tag = "Register",
+                                start = 0,
+                                end = annotationText.length
+                            ).firstOrNull()?.let {
+                                onNavigate(RegisterScreen)
+                            }
+                        }
+                    )
                 }
             }
         }

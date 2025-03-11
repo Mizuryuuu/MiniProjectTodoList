@@ -31,21 +31,20 @@ class LoginViewModel: ViewModel() {
     private  fun login() {
         if (_state.value.username.isBlank()) {
             _state.update {
-                it.copy(isDialog = true, isStatus = false, message = "Username tidak boleh kosong")
+                it.copy(isDialog = true, isStatus = false, message = "Oops! Username is missing.")
             }
             return
         }
         if (_state.value.password.isBlank()) {
             _state.update {
-                it.copy(isDialog = true, isStatus = false, message = "Password tidak boleh kosong")
+                it.copy(isDialog = true, isStatus = false, message = "Oops! Password is missing.")
             }
             return
         }
         _state.update {
             it.copy(
                 isDialog = true,
-                isStatus = true,
-                message = "${_state.value.username} berhasil login"
+                isStatus = true
             )
         }
     }
