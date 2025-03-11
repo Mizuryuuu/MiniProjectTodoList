@@ -33,6 +33,8 @@ fun CustomTextField(
             value = value,
             onValueChange = onValueChange,
             leadingIcon = leadingIcon,
+            trailingIcon = trailingIcon,
+            visualTransformation = visualTransformation,
             placeholder = {
                 Text(text = hint)
             }

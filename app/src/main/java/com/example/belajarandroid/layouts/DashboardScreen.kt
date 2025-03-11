@@ -7,9 +7,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.example.belajarandroid.helper.DashboardScreen
 
 @Composable
-fun MainScreen(modifier: Modifier = Modifier) {
+fun DashboardScreen(modifier: Modifier = Modifier) {
     Box(
         modifier = Modifier.fillMaxSize().clickable {  },
         contentAlignment = Alignment.Center
